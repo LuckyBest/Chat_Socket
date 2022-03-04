@@ -15,7 +15,11 @@ io.on("connection", async (socket) => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    socket.on("message", MessageControllerInstance.saveMessage);
+
+    socket.on("sendMessage", async (socket) => {
+      io.emit("getMessage",await MessageControllerInstance.saveMessage(socket));
+    });
+
   } catch (e) {
     console.log(e);
   }
