@@ -6,8 +6,10 @@ const io = require("socket.io")(PORT, {
   },
 });
 const mongoose = require("mongoose");
+const ConversationController = require("./controller/Conversation-controller.js");
 const MessageController = require("./controller/Messages-controller.js");
 const MessageControllerInstance = new MessageController();
+const ConversationControllerInstance = new ConversationController();
 
 io.on("connection", async (socket) => {
   try {
@@ -16,8 +18,9 @@ io.on("connection", async (socket) => {
       useUnifiedTopology: true,
     });
 
-    socket.on("sendMessage", async (socket) => {
-      io.emit("getMessage",await MessageControllerInstance.saveMessage(socket));
+    socket.on("sendMessage", async (data) => {
+      const { socketId } = await ConversationControllerInstance.getConversationData(data.conversationId);
+      io.emit("getMessage", await MessageControllerInstance.saveMessage(data));
     });
 
   } catch (e) {
