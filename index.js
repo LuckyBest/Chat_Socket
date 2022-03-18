@@ -19,7 +19,8 @@ io.on("connection", async (socket) => {
     });
 
     socket.on("sendMessage", async (data) => {
-      const { socketId } = await ConversationControllerInstance.getConversationData(data.conversationId);
+      const { _id } = await ConversationControllerInstance.getConversationData(data.conversationId);
+
       io.emit("getMessage", await MessageControllerInstance.saveMessage(data));
     });
 
